@@ -14,20 +14,20 @@ namespace Challenge
         {
             while (true)
             {
-                Console.WriteLine("Welcome to the Ship Challenge (x to exit)\n");
-                const string ship1 = "5 3\n1 1 E\nRFRFRFRF";
-                const string ship2 = "5 3\n3 2 N\nFRRFLLFFRRFLL";
-                const string ship3 = "0 3 W\nLLFFFLFLFL";
-                Console.WriteLine($"\n1 for ship1:\n{ship1}");
-                Console.WriteLine($"\n2 for ship2:\n{ship2}");
-                Console.WriteLine($"\n3 for ship2 and ship3:\n{ship2}\n{ship3}");
+                Console.WriteLine("Welcome to the Robot Journey (x to exit)\n");
+                const string robot1 = "5 3\n1 1 E\nRFRFRFRF";
+                const string robot2 = "5 3\n3 2 N\nFRRFLLFFRRFLL";
+                const string robot3 = "0 3 W\nLLFFFLFLFL";
+                Console.WriteLine($"\n1 for robot1:\n{robot1}");
+                Console.WriteLine($"\n2 for robot2:\n{robot2}");
+                Console.WriteLine($"\n3 for robot2 and robot3:\n{robot2}\n{robot3}");
 
                 var keypress = Console.ReadKey().Key;
                 var list = new List<string>();
                 if (keypress == ConsoleKey.X) break;
-                if (keypress == ConsoleKey.D1) list.Add(ship1);
-                if (keypress == ConsoleKey.D2) list.Add(ship2);
-                if (keypress == ConsoleKey.D3) list.AddRange(new[] { ship2, ship3 });
+                if (keypress == ConsoleKey.D1) list.Add(robot1);
+                if (keypress == ConsoleKey.D2) list.Add(robot2);
+                if (keypress == ConsoleKey.D3) list.AddRange(new[] { robot2, robot3 });
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\n\n Output: {Run(list.ToArray())} \n\n");
                 Console.ResetColor();
@@ -35,34 +35,34 @@ namespace Challenge
         }
 
         // Runs the engine - accepts input and returns output
-        // accepts an array of strings which are ships:
+        // accepts an array of strings which are robots:
         // gridMaxX, gridMaxY
         // x,y, orientation
         // instructions
         // eg 5 3\n1 1 E\nRFRFRFRF
         public static string Run(string[] inputs)
         {
-            // If there are multiple ships the grid is defined only by the first ship
+            // If there are multiple robtos the grid is defined only by the first ship
             // currentPosX, Y, currentOrientation, isLost are defined here as need to be returned from this method
             int gridMaxX = 0, gridMaxY = 0, currentPosX = 0, currentPosY = 0;
             string currentOrientation = null;
             var isLost = false;
-            // warningCoordsList needs to be passed between ships eg see ship2 and ship3 test
+            // warningCoordsList needs to be passed between robots eg see robot2 and robot3 test
             var warningCoordsList = new List<(int x, int y, string direction)>();
 
-            // Loop over each ship 
-            for (var ship = 0; ship < inputs.Length; ship++)
+            // Loop over each robot 
+            for (var robot = 0; robot < inputs.Length; robot++)
             {
                 // split input lines based on newline character \n
-                var lines = inputs[ship].Split("\n");
+                var lines = inputs[robot].Split("\n");
 
-                // If multiple ships then only the first includes the grid size on the first line
+                // If multiple robots then only the first includes the grid size on the first line
                 var gridSizeLine = 0;
                 var startPositionLine = 1;
                 var instructionPositionLine = 2;
 
-                // If it is the first ship assume gridsize is on first line
-                if (ship == 0)
+                // If it is the first robot assume gridsize is on first line
+                if (robot == 0)
                 {
                     // make the grid based on the the first line
                     var gridSizeStringArray = lines[gridSizeLine].Split(' '); // eg 5 3  assuming a single space
@@ -71,13 +71,13 @@ namespace Challenge
                     if (gridMaxX > 50 || gridMaxY > 50) throw new ArgumentException("Max grid size is 50");
                 }
                 else
-                // Not the first ship so first line will be startPositionLine.. 
+                // Not the first robot so first line will be startPositionLine.. 
                 {
                     startPositionLine--;
                     instructionPositionLine--;
                 }
 
-                // Starting position of the ship
+                // Starting position of the robot
                 var startPosStringArray = lines[startPositionLine].Split(' '); //eg 1 1 E
                 var startPosX = int.Parse(startPosStringArray[0]); // eg 1
                 var startPosY = int.Parse(startPosStringArray[1]); // eg 1
@@ -90,7 +90,7 @@ namespace Challenge
                 if (instructionsString.Length >= 100)
                     throw new ArgumentException("Instructions should be less than 100");
 
-                // Set current position and orientation of ship (starting position)
+                // Set current position and orientation of robot (starting position)
                 currentPosX = startPosX;
                 currentPosY = startPosY;
                 currentOrientation = startPosOrientation;
@@ -109,9 +109,9 @@ namespace Challenge
 
                     if (isLost)
                     {
-                        // Add to the warningCoordsList for next ship if there is one
+                        // Add to the warningCoordsList for next robot if there is one
                         warningCoordsList.Add((currentPosX, currentPosY, currentOrientation));
-                        break; // Gone off the grid and ship is lost
+                        break; // Gone off the grid and robot is lost
                     }
                 }
             }
